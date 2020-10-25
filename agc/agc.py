@@ -106,9 +106,9 @@ def dereplication_fullength(amplicon_file, minseqlen, mincount):
 
 def get_chunk(seq, chunk_size):
 	"""
-	...
-	Parameters: - 
-				- 
+	To get a sub-sequences of size not overlapping.
+	Parameters: - seq (sequence in fastq)
+				- chunk_size (segment length)
 	Return: a chunk 
 	"""
 	chunk_list = []
@@ -123,14 +123,30 @@ def get_chunk(seq, chunk_size):
 
 def cut_kmer(seq, kmer_size):
 	"""
+	Cuts the sequence in kmer with a kmer size.
+	Parameters: - seq (sequence in fastq)
+				- kmer_size (size of kmer)
+	Return: a generator of sequence's kmers.
 	"""
-	pass
+	for i in range(len(seq) - kmer_size + 1):
+		yield seq[i: i + kmer_size]
 
 
 def get_unique_kmer(kmer_dict, seq, id_seq, kmer_size):
 	"""
+	Builds a k-mer dictionary for a giver sequence.
+	Parameters: - kmer_dict (dictionnary of k-mer)
+				- seq (sequence in fastq)
+				- id_seq (id of the sequence)
+				- kmer_size (size of kmer)
+	Return: 
 	"""
-	pass
+	for sequence in cut_kmer(seq, kmer_size):
+		if sequence not in kmer_dict:
+			kmer_dict[sequence] = [id_seq]
+		elif id_seq not in kmer_dict[sequence]:
+			kmer_dict[sequence].append(id_seq)
+	return kmer_dict
 	
 
 def search_mates(kmer_dict, seq, kmer_size):
@@ -141,8 +157,17 @@ def search_mates(kmer_dict, seq, kmer_size):
 
 def get_identity(alignment_list):
 	"""
+	Calculates the percentage of identity between the two sequences.
+	Parameters: - alignment_list (list of alignment)
+	Return: the identity between the two sequences.
+	
 	"""
-	pass
+	compte = 0
+	for i in range(len(alignment_list[0])):
+		if alignment_list[0][i] == alignment_list[1][i]:
+			compte += 1
+	identity = (compte / len(alignment_list[0])) * 100
+	return identity
 
 
 def detect_chimera(perc_identity_matrix):
@@ -161,14 +186,16 @@ def abundance_greedy_clustering(amplicon_file, minseqlen, mincount, chunk_size, 
 	"""
 	"""
 	pass
-	
+
+
+def fill(text, width = 80):
+    return os.linesep.join(text[i:i+width] for i in range(0, len(text), width))
+
 
 def write_OTU(OTU_list, output_file):
 	"""
 	"""
 	pass
-
-
 
 
 
